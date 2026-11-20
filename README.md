@@ -5,7 +5,7 @@ PowerShell scripts for the full life of a user account in a hybrid Microsoft env
 
 Built and tested in my home lab (Windows Server 2022 domain controller, Microsoft Entra Connect, Microsoft 365 Business Basic).
 
-▶️ **Video walkthrough:** _add your YouTube link here_
+▶️ **Video walkthrough:** https://youtu.be/61mcKol2YDM?si=s5kFX8R_cUNDGFC8
 
 ---
 
