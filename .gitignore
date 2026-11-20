@@ -1,0 +1,7 @@
+# Logs and snapshots written by the scripts
+Logs/
+*.log
+Snapshot-*.csv
+Groups-*.txt
+Onboarding-*.csv
+Offboarding-*.txt
