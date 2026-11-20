@@ -13,12 +13,12 @@ Built and tested in my home lab (Windows Server 2022 domain controller, Microsof
 
 | Script | What it does |
 |---|---|
-| `scripts/Setup-InfranetLab.ps1` | Adds the UPN suffix, builds the OU structure (IT / Non-IT, 8 departments, Groups, Admin Accounts, Disabled Users) and creates AGDLP security groups. Optional `-CreateShares` builds department shares with NTFS permissions through the domain local groups. Safe to re-run. |
-| `scripts/Onboard-Employees.ps1` | Reads an HR CSV and creates each account in the right OU with all HR attributes, a temporary password (prompted, never stored) and *change at first sign-in*. Adds department, role and license groups. Future start dates are created **disabled**, contractors **expire**, IT staff get a separate **adm-** account. Sets managers, starts a delta sync, writes a log. |
-| `scripts/Enable-NewHires.ps1` | Enables accounts whose start date has arrived. Run it every morning with Task Scheduler. |
-| `scripts/Offboard-Employee.ps1` | Saves a snapshot, disables the account, resets the password to a random value, revokes Microsoft 365 sessions, converts the mailbox to shared with manager access and an auto-reply, removes groups (license last, only after the mailbox is safe), stamps the ticket, hides from the address list, moves to Disabled Users, handles the adm- account, syncs and logs. |
-| `samples/employees.csv` | 80 sample employees across 8 departments (fake data). |
-| `samples/new-hires.csv` | 4 sample new hires with a future start date. |
+| `Setup-InfranetLab.ps1` | Adds the UPN suffix, builds the OU structure (IT / Non-IT, 8 departments, Groups, Admin Accounts, Disabled Users) and creates AGDLP security groups. Optional `-CreateShares` builds department shares with NTFS permissions through the domain local groups. Safe to re-run. |
+| `Onboard-Employees.ps1` | Reads an HR CSV and creates each account in the right OU with all HR attributes, a temporary password (prompted, never stored) and *change at first sign-in*. Adds department, role and license groups. Future start dates are created **disabled**, contractors **expire**, IT staff get a separate **adm-** account. Sets managers, starts a delta sync, writes a log. |
+| `Enable-NewHires.ps1` | Enables accounts whose start date has arrived. Run it every morning with Task Scheduler. |
+| `Offboard-Employee.ps1` | Saves a snapshot, disables the account, resets the password to a random value, revokes Microsoft 365 sessions, converts the mailbox to shared with manager access and an auto-reply, removes groups (license last, only after the mailbox is safe), stamps the ticket, hides from the address list, moves to Disabled Users, handles the adm- account, syncs and logs. |
+| `employees.csv` | 80 sample employees across 8 departments (fake data). |
+| `new-hires.csv` | 4 sample new hires with a future start date. |
 
 ## Requirements
 
@@ -35,20 +35,20 @@ Always do a dry run with `-WhatIf` first. It shows what would change and changes
 
 ```powershell
 # 1. Build the structure
-.\scripts\Setup-InfranetLab.ps1 -UpnSuffix 'lab.contoso.com' -WhatIf
-.\scripts\Setup-InfranetLab.ps1 -UpnSuffix 'lab.contoso.com'
+.\Setup-InfranetLab.ps1 -UpnSuffix 'lab.contoso.com' -WhatIf
+.\Setup-InfranetLab.ps1 -UpnSuffix 'lab.contoso.com'
 
 # 2. Onboard everyone from the HR CSV (you will be asked for the temporary password)
-.\scripts\Onboard-Employees.ps1 -CsvPath .\samples\employees.csv -WhatIf
-.\scripts\Onboard-Employees.ps1 -CsvPath .\samples\employees.csv -Ticket REQ1001
+.\Onboard-Employees.ps1 -CsvPath .\employees.csv -WhatIf
+.\Onboard-Employees.ps1 -CsvPath .\employees.csv -Ticket REQ1001
 
 # 3. New hires (created disabled until their start date)
-.\scripts\Onboard-Employees.ps1 -CsvPath .\samples\new-hires.csv -Ticket REQ2001
-.\scripts\Enable-NewHires.ps1          # on their first morning
+.\Onboard-Employees.ps1 -CsvPath .\new-hires.csv -Ticket REQ2001
+.\Enable-NewHires.ps1          # on their first morning
 
 # 4. Offboard a leaver
-.\scripts\Offboard-Employee.ps1 -Username customeruser1.test -Ticket LAB-001 -WhatIf
-.\scripts\Offboard-Employee.ps1 -Username customeruser1.test -Ticket LAB-001
+.\Offboard-Employee.ps1 -Username customeruser1.test -Ticket LAB-001 -WhatIf
+.\Offboard-Employee.ps1 -Username customeruser1.test -Ticket LAB-001
 ```
 
 ## Entra Connect sync scope
